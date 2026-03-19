@@ -1,3 +1,8 @@
+# Configuración de variables de entorno (CRÍTICO)
+.env
+.env.local
+.env.dev
+.env.prod
 # Entorno Virtual
 venv/
 ENV/
