@@ -1,0 +1,5 @@
+DB_NAME=nombre_de_base
+DB_USER=usuario_postgres
+DB_PASSWORD=contraseña_postgres
+DB_HOST=hosting_de_la_bd
+DB_PORT=5432
