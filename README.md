@@ -10,7 +10,13 @@ Este proyecto es el núcleo de datos para la Pokédex del **Taller de QA**. Prop
 - **Django 5.x**
 - **Django REST Framework**
 - **PostgreSQL**
-- **Requests**
+- **psycopg2**
+- **django-cors-headers**
+- **python-dotenv**
+- **asgiref**
+- **sqlparse**
+- **tzdata**
+- **Requests** (con `certifi`, `urllib3`, `charset-normalizer`, `idna`)
 - **PyTest**
 
 ---
