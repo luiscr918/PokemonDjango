@@ -4,6 +4,7 @@ from rest_framework import status
 from pokemons.models import Pokemon
 from pokemons.serializers import PokemonSerializer
 from pokemons.serializers import TypeSerializer
+from rest_framework.pagination import PageNumberPagination
 
 
 @api_view(["POST"])
@@ -16,10 +17,23 @@ def guardar_pokemon(request):
 
 
 @api_view(["GET"])
-def listar_pokemons(_request):
-    pokemons = Pokemon.objects.all()
-    serializer = PokemonSerializer(pokemons, many=True)
-    return Response(serializer.data, status=status.HTTP_200_OK)
+def listar_pokemons(request):
+    # Obtenemos el parámetro 'search' de la URL (ej: /listar/?search=pika)
+    search_term = request.query_params.get('search', None)
+    
+    pokemons = Pokemon.objects.all().order_by('id')
+    
+    if search_term:
+        # Filtramos por nombre (icontains no distingue mayúsculas/minúsculas)
+        pokemons = pokemons.filter(name__icontains=search_term)
+    
+    paginator = PageNumberPagination()
+    paginator.page_size = 20
+    
+    result_page = paginator.paginate_queryset(pokemons, request)
+    serializer = PokemonSerializer(result_page, many=True)
+    
+    return paginator.get_paginated_response(serializer.data)
 
 
 @api_view(["GET"])
@@ -42,7 +56,7 @@ def actualizar_pokemon(request, pokemon_id):
         return Response(
             {"mensaje": "pokemon no encontrado"}, status=status.HTTP_404_NOT_FOUND
         )
-    serializer = PokemonSerializer(pokemon, data=request.data,partial=True)
+    serializer = PokemonSerializer(pokemon, data=request.data, partial=True)
     if serializer.is_valid():
         serializer.save()
         return Response(serializer.data)
