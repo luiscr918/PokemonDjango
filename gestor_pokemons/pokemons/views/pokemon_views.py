@@ -34,7 +34,7 @@ def obtener_pokemon_id(_request, pokemon_id):
     return Response(serializer.data, status=status.HTTP_200_OK)
 
 
-@api_view(["PUT"])
+@api_view(["PUT", "PATCH"])
 def actualizar_pokemon(request, pokemon_id):
     try:
         pokemon = Pokemon.objects.get(id=pokemon_id)
@@ -42,7 +42,7 @@ def actualizar_pokemon(request, pokemon_id):
         return Response(
             {"mensaje": "pokemon no encontrado"}, status=status.HTTP_404_NOT_FOUND
         )
-    serializer = PokemonSerializer(pokemon, data=request.data)
+    serializer = PokemonSerializer(pokemon, data=request.data,partial=True)
     if serializer.is_valid():
         serializer.save()
         return Response(serializer.data)
